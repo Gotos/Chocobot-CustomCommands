@@ -62,9 +62,9 @@ class CustomCommands
 		if id < 0
 			@messager.message("Kommando " + command.cmd + " existiert bereits.")
 		else
-			#@commands[command.cmd] = command
 			@commandIDs[command.cmd] = id
-			@messager.message("Kommando " + command.cmd + " wurde erfolgreich angelegt.")
+			CustomCommand.create(:name => command.cmd, :msg => msg, :priv => priv)
+			@messager.message("Kommando " + command.cmd + " wurde erfolgreich " + (edit ? "geändert." : "angelegt."))
 		end
 	end
 
@@ -73,6 +73,7 @@ class CustomCommands
 			if PluginLoader.removeCommand(cmd, @commandIDs[cmd])
 				@messager.message("Kommando " + cmd + " erfolgreich entfernt.") if verbose
 				@commandIDs.delete(cmd)
+				CustomCommand.get(cmd).destroy()
 				return true
 			end
 		end
@@ -90,8 +91,20 @@ class CustomCommands
 
 	def initialize(messager, logger)
 		@messager = messager
-		#@commands = {}
 		@commandIDs = {}
+		CustomCommand.all.each do |command|
+			real_command = Command.new(command.name, lambda do |data, actualPriv|
+				if actualPriv < command.priv
+					@messager.message(replaceVariables(command.msg, data))
+				end
+			end)
+			id = PluginLoader.addCommand(real_command)
+			if id < 0
+				@messager.message("Kommando " + real_command.cmd + " existiert bereits.")
+			else
+				@commandIDs[real_command.cmd] = id
+			end
+		end
 	end
 
 	def self.addPlugin()
