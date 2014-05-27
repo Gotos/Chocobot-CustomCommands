@@ -83,10 +83,10 @@ class CustomCommands
 
 	def replaceVariables(msg, data)
 		for i in 0..8
-			msg.gsub!("$(#{i+1})", data[i].to_s)
+			newmsg = msg.gsub("$(#{i+1})", data[i].to_s)
 		end
-		msg.gsub!("$(query)", data.join(" "))
-		return msg
+		newmsg.gsub!("$(query)", data.join(" "))
+		return newmsg
 	end
 
 	def initialize(messager, logger)
