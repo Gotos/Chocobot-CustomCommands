@@ -46,7 +46,7 @@ class CustomCommands
 
 		msg = data[1..-1].join(" ")
 
-		command = Command.new(cmd, lambda do |data, actualPriv|
+		command = Command.new(cmd, lambda do |data, actualPriv, user|
 			if actualPriv < priv
 				@messager.message(replaceVariables(msg, data))
 			end
@@ -108,17 +108,17 @@ class CustomCommands
 	end
 
 	def self.addPlugin()
-		PluginLoader.addCommand(Command.new("!addcom", lambda do |data, priv|
+		PluginLoader.addCommand(Command.new("!addcom", lambda do |data, priv, user|
 			if priv <= 10
 				getInstance.addCom(data)
 			end
 		end))
-		PluginLoader.addCommand(Command.new("!delcom", lambda do |data, priv|
+		PluginLoader.addCommand(Command.new("!delcom", lambda do |data, priv, user|
 			if priv <= 10
 				getInstance.delCom(data[0])
 			end
 		end))
-		PluginLoader.addCommand(Command.new("!editcom", lambda do |data, priv|
+		PluginLoader.addCommand(Command.new("!editcom", lambda do |data, priv, user|
 			if priv <= 10
 				getInstance.addCom(data, true)
 			end
