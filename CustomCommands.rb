@@ -94,9 +94,9 @@ class CustomCommands
 		@messager = messager
 		@commandIDs = {}
 		CustomCommand.all.each do |command|
-			real_command = Command.new(command.name, lambda do |data, actualPriv|
+			real_command = Command.new(command.name, lambda do |data, actualPriv, user|
 				if actualPriv < command.priv
-					@messager.message(replaceVariables(command.msg, data))
+					@messager.message(replaceVariables(command.msg, data, user))
 				end
 			end)
 			id = PluginLoader.addCommand(real_command)
