@@ -48,7 +48,7 @@ class CustomCommands
 
 		command = Command.new(cmd, lambda do |data, actualPriv, user|
 			if actualPriv < priv
-				@messager.message(replaceVariables(msg, data))
+				@messager.message(replaceVariables(msg, data, user))
 			end
 		end)
 
@@ -81,11 +81,12 @@ class CustomCommands
 		return false
 	end
 
-	def replaceVariables(msg, data)
+	def replaceVariables(msg, data, user)
 		for i in 0..8
 			newmsg = msg.gsub("$(#{i+1})", data[i].to_s)
 		end
 		newmsg.gsub!("$(query)", data.join(" "))
+		newmsg.gsub!("$(user)", user)
 		return newmsg
 	end
 
