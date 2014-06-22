@@ -2,6 +2,9 @@ require_relative './Model/CustomCommand.rb'
 
 class CustomCommands
 
+	PARSE_TO_SPACE = /[^ ]*/
+	PARSE_STRING = /"(?:[^"\\]|\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4}))*"/
+
 	attr_accessor :messager
 
 	PluginLoader.registerPlugin("CustomCommands", self)
@@ -77,6 +80,11 @@ class CustomCommands
 		return false
 	end
 
+	def listCom(priv)
+		commands = CustomCommand.all(:priv.gte => priv)
+		@messager.message("Folgende CustomCommands stehen dir zur Verfügung: " + commands.map{|c| c.name}.join(" "))
+	end
+
 	def replaceVariables(msg, data, user)
 		for i in 0..8
 			newmsg = msg.gsub("$(#{i+1})", data[i].to_s)
@@ -123,6 +131,9 @@ class CustomCommands
 			if priv <= 10
 				getInstance.addCom(data, true)
 			end
+		end))
+		PluginLoader.addCommand(Command.new("!listcom", lambda do |data, priv, user|
+			getInstance.listCom(priv)
 		end))
 	end
 end
