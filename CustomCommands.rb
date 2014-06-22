@@ -46,11 +46,7 @@ class CustomCommands
 
 		msg = data[1..-1].join(" ")
 
-		command = Command.new(cmd, lambda do |data, actualPriv, user|
-			if actualPriv < priv
-				@messager.message(replaceVariables(msg, data, user))
-			end
-		end)
+		command = genCommand(cmd, msg, priv)
 
 		if edit
 			if !delCom(cmd, false)
@@ -94,11 +90,7 @@ class CustomCommands
 		@messager = messager
 		@commandIDs = {}
 		CustomCommand.all.each do |command|
-			real_command = Command.new(command.name, lambda do |data, actualPriv, user|
-				if actualPriv < command.priv
-					@messager.message(replaceVariables(command.msg, data, user))
-				end
-			end)
+			real_command = genCommand(command.name, command.msg, command.priv)
 			id = PluginLoader.addCommand(real_command)
 			if id < 0
 				@messager.message("Kommando " + real_command.cmd + " existiert bereits.")
@@ -106,6 +98,14 @@ class CustomCommands
 				@commandIDs[real_command.cmd] = id
 			end
 		end
+	end
+
+	def genCommand(commandname, commandmsg, commandpriv)
+		return Command.new(commandname, lambda do |data, actualPriv, user|
+			if actualPriv <= commandpriv
+				@messager.message(replaceVariables(commandmsg, data, user))
+			end
+		end)
 	end
 
 	def self.addPlugin()
