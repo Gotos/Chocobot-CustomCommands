@@ -14,7 +14,7 @@ class CustomCommands
 	end
 
 	def addCom(data, edit = false)
-		priv = 40
+		priv = 30
 		if data[0][0..3] == "-ul="
 			case(data[0][4..-1])
 			when "owner"
