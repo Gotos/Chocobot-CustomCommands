@@ -19,3 +19,7 @@ Inside the message you can use Placeholders, just like in nightbot. Know placeho
 # Install
 
 Just place the CustomCommands-folder inside the "Plugins"-folder of Chocobot. If "Plugins" doesn't exist, create it. Also make sure to rename the CustomCommands-folder to "CustomCommands".
+
+# Download
+
+Just have a look at the [Releases page](https://github.com/Gotos/Chocobot-CustomCommands/releases)
